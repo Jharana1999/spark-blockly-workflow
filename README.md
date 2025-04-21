@@ -50,5 +50,5 @@ npm run dev
 
 Here’s what the drag-and-drop interface looks like in action:
 
-![Spark Blockly Preview](preview.png)
+![Spark Blockly Preview](example.png)
 
