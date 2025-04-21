@@ -1,0 +1,38 @@
+# Node
+node_modules/
+.env
+dist/
+build/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+
+# Logs
+*.log
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Temp
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# Output
+*.sqlite
+*.db
+*.csv
+*.out
+*.zip
+
+# Spark temp
+metastore_db/
+spark-warehouse/
