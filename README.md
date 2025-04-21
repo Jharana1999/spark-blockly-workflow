@@ -44,3 +44,11 @@ node index.js
 cd frontend/web
 npm install
 npm run dev
+
+
+## Example Output
+
+Here’s what the drag-and-drop interface looks like in action:
+
+![Spark Blockly Preview](preview.png)
+
