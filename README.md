@@ -52,3 +52,6 @@ Here’s what the drag-and-drop interface looks like in action:
 
 ![Spark Blockly Preview](example.png)
 
+<img src="example.png" alt="Spark Blockly Preview" width="700"/>
+
+
