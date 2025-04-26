@@ -4,7 +4,7 @@ import { pythonGenerator } from 'blockly/python';
 import './blocks.js';
 import 'blockly/python';
 
-const toolboxXml = /* xml */ `
+const toolboxXml = `
 <xml xmlns="https://developers.google.com/blockly/xml">
   <block type="read_csv"></block>
   <block type="flatmap"></block>
@@ -20,24 +20,42 @@ const toolboxXml = /* xml */ `
 export default function App() {
   const blocklyDiv = useRef(null);
   const workspaceRef = useRef(null);
-  const [output, setOutput] = useState('');
 
+  const [output,   setOutput]   = useState('');
+  const [csvReady, setCsvReady] = useState(false);
+
+  /* 1️⃣  Get CSV list once */
   useEffect(() => {
-    if (workspaceRef.current) return;
+    fetch('http://localhost:5001/api/csv-files')
+      .then(r => r.json())
+      .then(list => {
+        console.log('[frontend] csv list:', list);
+        window.__CSV_FILE_OPTIONS__ = list;
+        setCsvReady(true);
+      })
+      .catch(err => {
+        console.error('[frontend] csv fetch failed:', err);
+        setCsvReady(true);
+      });
+  }, []);
+
+  /* 2️⃣  Inject Blockly when list ready */
+  useEffect(() => {
+    if (workspaceRef.current || !csvReady) return;
 
     const workspace = Blockly.inject(blocklyDiv.current, {
       toolbox: toolboxXml,
-      grid: { spacing: 20, length: 3, colour: '#ccc' },
-      zoom: { controls: true },
-      theme: Blockly.Themes.Classic
+      grid   : { spacing: 20, length: 3, colour: '#ccc' },
+      zoom   : { controls: true },
+      theme  : Blockly.Themes.Classic
     });
 
     workspace.clear();
     workspaceRef.current = workspace;
-
     return () => workspace.dispose();
-  }, []);
+  }, [csvReady]);
 
+  /* 3️⃣  Run handler */
   const handleRun = async () => {
     const codeBody = pythonGenerator.workspaceToCode(workspaceRef.current);
     const fullCode = [
@@ -53,14 +71,12 @@ export default function App() {
       'spark = SparkSession.builder.master("local[*]").appName("BlocklyFlow").getOrCreate()',
       'sc = spark.sparkContext',
       '',
-      '# Initialize variables',
+      '# variables',
       'rdd = None',
       'result = None',
       '',
       codeBody,
       '',
-      'print("File exists:", os.path.exists("../data/wordcount.txt"))',
-      'print("RDD count:", rdd.count())',
       'if hasattr(result, "take"):',
       '    print("Result preview:", result.take(10))',
       'else:',
@@ -69,17 +85,16 @@ export default function App() {
       'spark.stop()'
     ].join('\n');
 
-    console.log("\uD83D\uDD25 Generated Spark code:\n", fullCode);
+    console.log('🔥 Generated Spark code:\n', fullCode);
 
     try {
-      const res = await fetch('http://localhost:5001/api/run', {
-        method: 'POST',
+      const res  = await fetch('http://localhost:5001/api/run', {
+        method : 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code: fullCode })
+        body   : JSON.stringify({ code: fullCode })
       });
-
       const data = await res.json();
-      setOutput(data.stdout || data.error || 'No output received.');
+      setOutput(data.stdout || data.error || 'No output.');
     } catch (err) {
       setOutput('Failed to run: ' + err.message);
     }
