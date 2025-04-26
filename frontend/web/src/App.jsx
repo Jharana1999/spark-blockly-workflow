@@ -97,7 +97,7 @@ export default function App() {
         ref={blocklyDiv}
         style={{
           marginTop: 20,
-          height: '80vh',
+          height: '60vh',
           width: 800,
           border: '1px solid #ccc',
           background: '#fafafa'
