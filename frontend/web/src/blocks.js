@@ -21,7 +21,12 @@ Blockly.Blocks.map = {
       .appendField(new Blockly.FieldDropdown([
         ['add1', 'add1'],
         ['splitCSV', 'splitCSV'],
-        ['toPair', 'toPair']
+        ['toPair', 'toPair'],
+        ['parseFlights', 'parseFlights'],
+        ['parseTicketFlights', 'parseTicketFlights'],
+        ['parseAirports', 'parseAirports'],
+        ['extractLeft', 'extractLeft'],
+        ['extractRight', 'extractRight']
       ]), 'UDF');
     this.setPreviousStatement(true, 'RDD');
     this.setNextStatement(true, 'RDD');
@@ -44,17 +49,34 @@ Blockly.Blocks.filter = {
   }
 };
 
+
 // REDUCE
 Blockly.Blocks.reduce = {
   init() {
     this.appendDummyInput()
       .appendField('reduce with')
-      .appendField(new Blockly.FieldDropdown([['sumInts', 'sumInts']]), 'UDF');
+      .appendField(new Blockly.FieldDropdown([
+        ['sumInts', 'sumInts']
+      ]), 'UDF');
     this.setPreviousStatement(true, 'RDD');
-    this.setNextStatement(true, 'RDD');   // allows chaining
+    this.setNextStatement(true, 'RDD');
     this.setColour(260);
   }
 };
+
+Blockly.Blocks.reduce_by_key = {
+  init() {
+    this.appendDummyInput()
+      .appendField('reduceByKey with')
+      .appendField(new Blockly.FieldDropdown([
+        ['sumInts', 'sumInts']
+      ]), 'UDF');
+    this.setPreviousStatement(true, 'RDD');
+    this.setNextStatement(true, 'RDD');
+    this.setColour(260);
+  }
+};
+
 
 // COUNT
 Blockly.Blocks.count = {

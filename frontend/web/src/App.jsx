@@ -18,7 +18,7 @@ const toolboxXml = /* xml */ `
 `;
 
 export default function App() {
-  const blocklyDiv   = useRef(null);
+  const blocklyDiv = useRef(null);
   const workspaceRef = useRef(null);
   const [output, setOutput] = useState('');
 
@@ -68,7 +68,6 @@ export default function App() {
       'sys.stdout.flush()',
       'spark.stop()'
     ].join('\n');
-    
 
     console.log("\uD83D\uDD25 Generated Spark code:\n", fullCode);
 
@@ -87,27 +86,62 @@ export default function App() {
   };
 
   return (
-    <div style={{ padding: 24, fontFamily: 'sans-serif' }}>
-      <h2> Spark Drag‑and‑Drop Workflow</h2>
-      <button onClick={handleRun} style={{ fontSize: 16, padding: '6px 14px' }}>
-        ▶️ Run Spark Job
-      </button>
+    <div style={{ height: '100vh', width: '100vw', display: 'flex', flexDirection: 'column', fontFamily: 'sans-serif' }}>
+      {/* Header Title */}
+      <div style={{ padding: 16, background: '#222', color: 'white', textAlign: 'center' }}>
+        <h2 style={{ margin: 0, fontSize: 28 }}>ShaRaFlow - Spark Drag‑and‑Drop Workflow</h2>
+      </div>
 
-      <div
-        ref={blocklyDiv}
-        style={{
-          marginTop: 20,
-          height: '60vh',
-          width: 800,
-          border: '1px solid #ccc',
-          background: '#fafafa'
-        }}
-      />
+      {/* Button Row */}
+      <div style={{ padding: 12, background: '#333', display: 'flex', justifyContent: 'center', gap: 12 }}>
+        <button
+          onClick={handleRun}
+          style={{ fontSize: 16, padding: '10px 20px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: 4 }}
+        >
+          ▶️ Run Spark Job
+        </button>
 
-      <h3>🔍 Output</h3>
-      <pre style={{ background: '#f5f5f5', padding: 12, whiteSpace: 'pre-wrap' }}>
-        {output}
-      </pre>
+        <button
+          onClick={() => {
+            if (workspaceRef.current) {
+              workspaceRef.current.clear();
+            }
+          }}
+          style={{ fontSize: 16, padding: '10px 20px', backgroundColor: '#dc3545', color: 'white', border: 'none', borderRadius: 4 }}
+        >
+           Clear Workspace
+        </button>
+      </div>
+
+      {/* Main Split Screen */}
+      <div style={{ flex: 1, display: 'flex' }}>
+        {/* Blockly Editor */}
+        <div
+          ref={blocklyDiv}
+          style={{
+            flex: 2,
+            background: '#fafafa',
+            borderRight: '2px solid #ccc'
+          }}
+        />
+
+        {/* Output Console */}
+        <div
+          style={{
+            flex: 1,
+            background: '#111',
+            color: '#0f0',
+            padding: 16,
+            overflowY: 'auto',
+            fontFamily: 'monospace'
+          }}
+        >
+          <h3 style={{ color: 'white', marginTop: 0 }}>🔍 Output</h3>
+          <pre style={{ whiteSpace: 'pre-wrap' }}>
+            {output}
+          </pre>
+        </div>
+      </div>
     </div>
   );
 }
