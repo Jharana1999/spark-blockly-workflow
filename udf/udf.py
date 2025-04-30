@@ -1,5 +1,11 @@
-from math import sqrt, radians, sin, cos, atan2
+from math   import sqrt, radians, sin, cos, atan2
+from typing import Tuple, Any, Optional
 
+def notNone(x):
+    return x is not None
+
+def splitText(line: str) -> list[str]:
+    return line.split()
 
 
 def add1(x: int) -> int:
@@ -26,12 +32,17 @@ def parseFlights(line: str) -> tuple[int, tuple[str, str]]:
     arr_airport = parts[5]
     return (flight_id, (dep_airport, arr_airport))
 
-def parseTicketFlights(line: str) -> tuple[int, float]:
-    parts = line.split(',')
-    ticket_no = parts[0]
-    flight_id = int(parts[1])
-    amount = float(parts[3])
-    return (flight_id, amount)
+def parseTicketFlights(line: str) -> Optional[tuple[int, float]]:
+    parts = line.strip().split(',')
+    if parts[0] == "ticket_no": 
+        return None
+    try:
+        flight_id = int(parts[1])
+        amount = float(parts[3])
+        return (flight_id, amount)
+    except:
+        return None
+
 
 def parseAirports(line: str) -> tuple[str, tuple[float, float]]:
     parts = line.split(',')
@@ -40,21 +51,28 @@ def parseAirports(line: str) -> tuple[str, tuple[float, float]]:
     lon = float(parts[4])
     return (airport_code, (lat, lon))
 
-def distance(x: tuple[float, float], y: tuple[float, float]) -> float:
-    # x = (lat1, lon1), y = (lat2, lon2)
-    R = 6373.0  # Earth's radius in km
-    lat1 = radians(x[0])
-    lon1 = radians(x[1])
-    lat2 = radians(y[0])
-    lon2 = radians(y[1])
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-    c = 2 * atan2(sqrt(a), sqrt(1 - a))
-    return R * c * 0.621371  # Convert km to miles
-
 def extractLeft(pair: tuple) -> any:
     return pair[0]
 
 def extractRight(pair: tuple) -> any:
     return pair[1]
+
+def toDepartureKeyVal(line: str) -> tuple[str, int]:
+    if "departure_airport" in line:
+        return ("__header__", 0)  # mark and exclude later
+    try:
+        airport = line.split(',')[4]
+        return (airport, 1)
+    except:
+        return ("unknown", 1)
+def notHeaderOrUnknown(pair: tuple[str, int]) -> bool:
+    return pair[0] not in ("__header__", "unknown")
+
+
+def toAircraftKeyVal(line: str) -> tuple[str, int]:
+    if "aircraft_code" in line:
+        return ("__header__", 0)  # skip header
+    try:
+        return (line.split(',')[7], 1)
+    except:
+        return ("unknown", 1)

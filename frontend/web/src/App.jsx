@@ -6,16 +6,33 @@ import 'blockly/python';
 
 const toolboxXml = `
 <xml xmlns="https://developers.google.com/blockly/xml">
+  <!-- File Reading -->
   <block type="read_csv"></block>
+
+  <!-- Transformations -->
   <block type="flatmap"></block>
   <block type="map"></block>
   <block type="filter"></block>
+   <block type="skip_header"></block>
+
+  <!-- Aggregations -->
   <block type="reduce"></block>
   <block type="reduce_by_key"></block>
+
+  <!-- Joins -->
+  <block type="join"></block>
+  <block type="join_rdd"></block>
+
+  <!-- Storage & Output -->
   <block type="count"></block>
+  <block type="sort_rdd"></block>
+  <block type="store_as_rdd2"></block>
   <block type="store_result"></block>
+  <block type="debug_print"></block>
 </xml>
 `;
+
+
 
 export default function App() {
   const blocklyDiv = useRef(null);
