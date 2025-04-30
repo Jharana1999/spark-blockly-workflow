@@ -44,12 +44,18 @@ def parseTicketFlights(line: str) -> Optional[tuple[int, float]]:
         return None
 
 
-def parseAirports(line: str) -> tuple[str, tuple[float, float]]:
-    parts = line.split(',')
-    airport_code = parts[0]
-    lat = float(parts[3])
-    lon = float(parts[4])
-    return (airport_code, (lat, lon))
+def parseAirports(line: str):
+    parts = line.strip().split(',')
+    if parts[0] == "airport_code":
+        return None
+    try:
+        airport_code = parts[0]
+        lat = float(parts[3])
+        lon = float(parts[4])
+        return (airport_code, (lat, lon))
+    except:
+        return None
+
 
 def extractLeft(pair: tuple) -> any:
     return pair[0]
