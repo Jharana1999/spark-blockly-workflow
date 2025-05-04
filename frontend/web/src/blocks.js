@@ -39,6 +39,7 @@ Blockly.Blocks.map = {
           ['parseFlights', 'parseFlights'],
           ['parseTicketFlights', 'parseTicketFlights'],
           ['parseAirports', 'parseAirports'],
+          ['toDepAmount', 'toDepAmount'],
           ['extractLeft', 'extractLeft'],
           ['extractRight', 'extractRight'],
           ['toDepartureKeyVal', 'toDepartureKeyVal'],
@@ -214,7 +215,7 @@ try:
     import pyspark
     df = rdd.toDF(["key", "value"])
     print("Displaying as DataFrame:")
-    df.show(5)
+    df.show(n=5, truncate=False)
 except Exception as e:
     print("Could not display RDD as DataFrame:", e)
 `.trim() + '\n';
@@ -237,7 +238,7 @@ pythonGenerator.forBlock['join_rdd'] = () =>
 Blockly.Blocks.store_as_rdd2 = {
   init() {
     this.appendDummyInput()
-      .appendField('store as rdd2');
+      .appendField('store as rdd');
     this.setPreviousStatement(true, 'RDD');
     this.setNextStatement(true, 'RDD');
     this.setColour(320);

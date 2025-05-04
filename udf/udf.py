@@ -82,3 +82,11 @@ def toAircraftKeyVal(line: str) -> tuple[str, int]:
         return (line.split(',')[7], 1)
     except:
         return ("unknown", 1)
+
+def toDepAmount(rec: tuple[int, tuple[tuple[str, str], float]]):
+    """
+    Input  : (flight_id, ((dep, arr), amount))
+    Output : (dep, amount)
+    """
+    _, ((dep, _), amt) = rec
+    return (dep, amt)
