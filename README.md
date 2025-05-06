@@ -2,21 +2,21 @@
 
 An interactive **visual Spark workflow builder** using [Blockly](https://developers.google.com/blockly) and **PySpark**.
 
-## 🔧 Features
+## Features
 
 - Drag-and-drop blocks to build a Spark data pipeline
 - Translate blocks to real PySpark code
 - Run Spark jobs with a single click
 - Supports flatMap, map, reduceByKey, filter, count, and more
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - Frontend: React + Blockly
 - Backend: Node.js (Express) + Python
 - Spark: PySpark local mode
 - Communication: REST API
 
-## 📦 Setup
+## Setup
 
 ### Prerequisites
 
