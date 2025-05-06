@@ -41,7 +41,7 @@ export default function App() {
   const [output,   setOutput]   = useState('');
   const [csvReady, setCsvReady] = useState(false);
 
-  /* 1️⃣  Get CSV list once */
+  /*  Get CSV list once */
   useEffect(() => {
     fetch('http://localhost:5001/api/csv-files')
       .then(r => r.json())
@@ -102,7 +102,7 @@ export default function App() {
       'spark.stop()'
     ].join('\n');
 
-    console.log('🔥 Generated Spark code:\n', fullCode);
+    console.log('Generated Spark code:\n', fullCode);
 
     try {
       const res  = await fetch('http://localhost:5001/api/run', {

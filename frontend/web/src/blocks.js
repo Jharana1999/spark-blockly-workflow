@@ -238,7 +238,7 @@ pythonGenerator.forBlock['join_rdd'] = () =>
 Blockly.Blocks.store_as_rdd2 = {
   init() {
     this.appendDummyInput()
-      .appendField('store as rdd');
+      .appendField('store as RDD');
     this.setPreviousStatement(true, 'RDD');
     this.setNextStatement(true, 'RDD');
     this.setColour(320);

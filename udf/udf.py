@@ -65,7 +65,7 @@ def extractRight(pair: tuple) -> any:
 
 def toDepartureKeyVal(line: str) -> tuple[str, int]:
     if "departure_airport" in line:
-        return ("__header__", 0)  # mark and exclude later
+        return ("__header__", 0)  
     try:
         airport = line.split(',')[4]
         return (airport, 1)
@@ -77,7 +77,7 @@ def notHeaderOrUnknown(pair: tuple[str, int]) -> bool:
 
 def toAircraftKeyVal(line: str) -> tuple[str, int]:
     if "aircraft_code" in line:
-        return ("__header__", 0)  # skip header
+        return ("__header__", 0)  
     try:
         return (line.split(',')[7], 1)
     except:
