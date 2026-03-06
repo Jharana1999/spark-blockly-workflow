@@ -11,6 +11,20 @@ const withApiBase = (pathname) => {
   return `${apiBase.replace(/\/$/, '')}${pathname}`;
 };
 
+// Static CSV list used in the GitHub Pages demo when there is no backend.
+const STATIC_CSV_FILES = [
+  'aircrafts_data.csv',
+  'airports_data.csv',
+  'boarding_passes.csv',
+  'bookings.csv',
+  'flights.csv',
+  'seats.csv',
+  'text.csv',
+  'tickets.csv',
+  'ticket_flights.csv',
+  'wordcount.csv'
+];
+
 const toolboxXml = `
 <xml xmlns="https://developers.google.com/blockly/xml">
   <!-- File Reading -->
@@ -52,6 +66,8 @@ export default function App() {
   useEffect(() => {
     const csvUrl = withApiBase('/api/csv-files');
     if (!csvUrl) {
+      // Static demo mode (GitHub Pages): use the known CSV list from the repo.
+      window.__CSV_FILE_OPTIONS__ = STATIC_CSV_FILES;
       setCsvReady(true);
       return;
     }
