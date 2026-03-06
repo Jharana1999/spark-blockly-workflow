@@ -2,9 +2,13 @@
 import * as Blockly from 'blockly';
 import { pythonGenerator } from 'blockly/python';
 
-/* Helper that always shows the latest CSV list coming from React */
-const csvOptions = () =>
-  (window.__CSV_FILE_OPTIONS__ || []).map(f => [f, f]);
+/* Helper that always shows the latest CSV list coming from React.
+   Blockly FieldDropdown cannot accept an empty options array, so we fall back
+   to a single placeholder option when there are no CSV files. */
+const csvOptions = () => {
+  const list = (window.__CSV_FILE_OPTIONS__ || []).map(f => [f, f]);
+  return list.length ? list : [['<no CSV files>', '__NONE__']];
+};
 
 /* ─────── READ CSV  (single-select) ─────── */
 Blockly.Blocks.read_csv = {
@@ -22,7 +26,7 @@ Blockly.Blocks.read_csv = {
 
 pythonGenerator.forBlock['read_csv'] = blk => {
   const file = blk.getFieldValue('PATH');
-  if (!file) return '# No CSV selected\n';
+  if (!file || file === '__NONE__') return '# No CSV selected\n';
   return `rdd = sc.textFile("../data/${file}")\n`;
 };
 
@@ -167,7 +171,7 @@ Blockly.Blocks.join = {
 pythonGenerator.forBlock['join'] = blk => {
   const file = blk.getFieldValue('PATH');
   const udf  = blk.getFieldValue('UDF');
-  if (!file) return '# No join CSV selected\n';
+  if (!file || file === '__NONE__') return '# No join CSV selected\n';
 
   return (
     `rdd2 = sc.textFile("../data/${file}")\\\n` +
