@@ -2,6 +2,10 @@
 
 An interactive **visual Spark workflow builder** using [Blockly](https://developers.google.com/blockly) and **PySpark**.
 
+## Live demo (GitHub Pages)
+
+- Frontend: `https://jharana1999.github.io/spark-blockly-workflow/`
+
 ## Features
 
 - Drag-and-drop blocks to build a Spark data pipeline
@@ -30,7 +34,7 @@ An interactive **visual Spark workflow builder** using [Blockly](https://develop
 
 ```bash
 # 1. Clone repo
-git clone https://github.com/yourname/spark-blockly-workflow.git
+git clone https://github.com/Jharana1999/spark-blockly-workflow.git
 cd spark-blockly-workflow
 
 # 2. Install backend dependencies
@@ -44,6 +48,7 @@ node index.js
 cd frontend/web
 npm install
 npm run dev
+```
 
 
 ## Example Output
