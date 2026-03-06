@@ -4,6 +4,13 @@ import { pythonGenerator } from 'blockly/python';
 import './blocks.js';
 import 'blockly/python';
 
+const defaultApiBase = import.meta.env.DEV ? 'http://localhost:5001' : '';
+const apiBase = (import.meta.env.VITE_API_BASE ?? defaultApiBase).trim();
+const withApiBase = (pathname) => {
+  if (!apiBase) return null;
+  return `${apiBase.replace(/\/$/, '')}${pathname}`;
+};
+
 const toolboxXml = `
 <xml xmlns="https://developers.google.com/blockly/xml">
   <!-- File Reading -->
@@ -43,7 +50,13 @@ export default function App() {
 
   /*  Get CSV list once */
   useEffect(() => {
-    fetch('http://localhost:5001/api/csv-files')
+    const csvUrl = withApiBase('/api/csv-files');
+    if (!csvUrl) {
+      setCsvReady(true);
+      return;
+    }
+
+    fetch(csvUrl)
       .then(r => r.json())
       .then(list => {
         console.log('[frontend] csv list:', list);
@@ -74,13 +87,13 @@ export default function App() {
 
   /* 3️⃣  Run handler */
   const handleRun = async () => {
+    if (!workspaceRef.current) {
+      setOutput('Workspace not ready yet.');
+      return;
+    }
+
     const codeBody = pythonGenerator.workspaceToCode(workspaceRef.current);
     const fullCode = [
-      'import os',
-      'os.environ["JAVA_HOME"] = r"C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.7.6-hotspot"',
-      'os.environ["PYSPARK_PYTHON"] = r"C:\\Users\\jhara\\AppData\\Local\\Programs\\Python\\Python311\\python.exe"',
-      'os.environ["PYSPARK_DRIVER_PYTHON"] = r"C:\\Users\\jhara\\AppData\\Local\\Programs\\Python\\Python311\\python.exe"',
-      '',
       'from pyspark.sql import SparkSession',
       'from udf import *',
       'import sys',
@@ -103,9 +116,18 @@ export default function App() {
     ].join('\n');
 
     console.log('Generated Spark code:\n', fullCode);
+    setOutput(fullCode);
+
+    const runUrl = withApiBase('/api/run');
+    if (!runUrl) {
+      setOutput(
+        `${fullCode}\n\n[Info] Backend is not configured in production. Run locally (backend on port 5001) to execute.`
+      );
+      return;
+    }
 
     try {
-      const res  = await fetch('http://localhost:5001/api/run', {
+      const res  = await fetch(runUrl, {
         method : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body   : JSON.stringify({ code: fullCode })
@@ -113,7 +135,7 @@ export default function App() {
       const data = await res.json();
       setOutput(data.stdout || data.error || 'No output.');
     } catch (err) {
-      setOutput('Failed to run: ' + err.message);
+      setOutput(`${fullCode}\n\n[Error] Failed to run: ${err.message}`);
     }
   };
 
